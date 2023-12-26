@@ -1,20 +1,31 @@
 pipeline {
     agent any
-    
-    tools{
-        maven "Maven-3.9.4"
-    }
 
     stages {
-        stage('Clone') {
+        stage('Checkout') {
             steps {
-                git 'https://github.com/ashokitschool/maven-web-app.git'
+                git branch: 'master', credentialsId: 'github', url: 'https://github.com/Madhuchandang1/sample_2.git'
             }
         }
-         stage('Build') {
+
+        stage('Build') {
             steps {
-                sh 'mvn clean package'
+                sh 'mvn clean install'
             }
         }
+
+        stage('Push') {
+            steps {
+                echo 'This is Push Stage'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'sudo cp /home/ec2-user/sample_2/target/maven-web-app.war /home/ec2-user/apache-tomcat-9.0.84/webapps'
+            }
+        }
+
     }
+
 }
